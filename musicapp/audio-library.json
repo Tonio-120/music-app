@@ -1,0 +1,23 @@
+[
+  {
+    "title": "Good Old Days",
+    "artist": "Tadz",
+    "year": 2024,
+    "genre": "Unknown",
+    "filePath": "musicapp/songs/Tadz - Good Ole Days.wav"
+  },
+  {
+    "title": "Soulmates",
+    "artist": "Tadz",
+    "year": 2024,
+    "genre": "Unknown",
+    "filePath": "musicapp/songs/Tadz - Soulmates (Dear Future Wife _ Husband).wav"
+  },
+  {
+    "title": "Failure",
+    "artist": "A. Cooper",
+    "year": 2024,
+    "genre": "Unknown",
+    "filePath": "musicapp/songs/A. Cooper - Failure.wav"
+  }
+]
