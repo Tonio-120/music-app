@@ -1,0 +1,12 @@
+#Ignore compiled files
+*.class
+
+#Ignore build files
+target/
+
+#Ignore audio files
+*.wav
+
+# OS junk
+.DS_Store
+Thumbs.db
