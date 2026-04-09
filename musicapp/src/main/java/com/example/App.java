@@ -17,6 +17,9 @@ public class App {
             System.out.println("[H]ome");
             System.out.println("[S]earch by title");
             System.out.println("[L]ibrary");
+            System.out.println("[P]ause");
+            System.out.println("[R]esume");
+            System.out.println("[X] Stop");
             System.out.println("[Q]uit");
 
             System.out.print("Choose an option: ");
@@ -25,29 +28,48 @@ public class App {
             switch (choice) {
 
                 case "H":
-                    try {
-                        File file = new File("musicapp/songs/F J Blues - Unknown Man.wav");
-                        javax.sound.sampled.AudioInputStream audio =
-                                javax.sound.sampled.AudioSystem.getAudioInputStream(file);
-
-                        if (currentClip != null && currentClip.isRunning()) {
-                            currentClip.stop();
-                            currentClip.close();
-                        }
-
-                        currentClip = javax.sound.sampled.AudioSystem.getClip();
-                        currentClip.open(audio);
-                        currentClip.start();
-
-                        System.out.println("Playing song...");
-                    } catch (Exception e) {
-                        System.out.println("Error playing file");
-                        e.printStackTrace();
-                    }
+                    playSong("musicapp/songs/F J Blues - Unknown Man.wav");
                     break;
 
                 case "S":
-                    System.out.println("You selected Search by title.");
+                    File searchFolder = new File("musicapp/songs");
+                    File[] searchFiles = searchFolder.listFiles();
+
+                    System.out.print("Enter song name to search: ");
+                    String search = scanner.nextLine().toLowerCase();
+
+                    System.out.println("=== Results ===");
+
+                    if (searchFiles != null) {
+                        int count = 1;
+
+                        for (int i = 0; i < searchFiles.length; i++) {
+                            if (searchFiles[i].getName().toLowerCase().contains(search)) {
+                                System.out.println(count + ". " + searchFiles[i].getName());
+                                count++;
+                            }
+                        }
+
+                        if (count == 1) {
+                            System.out.println("No songs found.");
+                            break;
+                        }
+
+                        System.out.print("Enter number to play: ");
+                        int choiceNum = Integer.parseInt(scanner.nextLine());
+
+                        int currentIndex = 1;
+
+                        for (int i = 0; i < searchFiles.length; i++) {
+                            if (searchFiles[i].getName().toLowerCase().contains(search)) {
+                                if (currentIndex == choiceNum) {
+                                    playSong(searchFiles[i].getPath());
+                                    break;
+                                }
+                                currentIndex++;
+                            }
+                        }
+                    }
                     break;
 
                 case "L":
@@ -67,36 +89,45 @@ public class App {
                         int songChoice = Integer.parseInt(scanner.nextLine());
 
                         if (songChoice >= 1 && songChoice <= listOfFiles.length) {
-                            try {
-                                File file = listOfFiles[songChoice - 1];
-                                javax.sound.sampled.AudioInputStream audio =
-                                        javax.sound.sampled.AudioSystem.getAudioInputStream(file);
-
-                                if (currentClip != null && currentClip.isRunning()) {
-                                    currentClip.stop();
-                                    currentClip.close();
-                                }
-
-                                currentClip = javax.sound.sampled.AudioSystem.getClip();
-                                currentClip.open(audio);
-                                currentClip.start();
-
-                                System.out.println("Playing: " + file.getName());
-                            } catch (Exception e) {
-                                System.out.println("Error playing selected file");
-                                e.printStackTrace();
-                            }
+                            playSong(listOfFiles[songChoice - 1].getPath());
                         } else {
                             System.out.println("Invalid number.");
                         }
                     }
+                    break;
 
+                case "P":
+                    if (currentClip != null && currentClip.isRunning()) {
+                        currentClip.stop();
+                        System.out.println("Song paused.");
+                    } else {
+                        System.out.println("No song is currently playing.");
+                    }
+                    break;
+
+                case "R":
+                    if (currentClip != null) {
+                        currentClip.start();
+                        System.out.println("Song resumed.");
+                    } else {
+                        System.out.println("No song loaded.");
+                    }
+                    break;
+
+                case "X":
+                    if (currentClip != null) {
+                        currentClip.stop();
+                        currentClip.setFramePosition(0);
+                        System.out.println("Song stopped.");
+                    } else {
+                        System.out.println("No song loaded.");
+                    }
                     break;
 
                 case "Q":
                     running = false;
 
-                    if (currentClip != null && currentClip.isRunning()) {
+                    if (currentClip != null) {
                         currentClip.stop();
                         currentClip.close();
                     }
@@ -112,5 +143,27 @@ public class App {
         }
 
         scanner.close();
+    }
+
+    public static void playSong(String path) {
+        try {
+            if (currentClip != null) {
+                currentClip.stop();
+                currentClip.close();
+            }
+
+            File file = new File(path);
+            javax.sound.sampled.AudioInputStream audio =
+                    javax.sound.sampled.AudioSystem.getAudioInputStream(file);
+
+            currentClip = javax.sound.sampled.AudioSystem.getClip();
+            currentClip.open(audio);
+            currentClip.start();
+
+            System.out.println("Playing: " + file.getName());
+        } catch (Exception e) {
+            System.out.println("Error playing file");
+            e.printStackTrace();
+        }
     }
 }
