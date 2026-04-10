@@ -5,5 +5,7 @@ public class Song {
     String artist;
     int year;
     String genre;
+    boolean isFavorite;
+    String comments;
     String filePath;
 }

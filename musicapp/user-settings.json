@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Good Old Days",
+    "artist": "Tadz",
+    "year": 2024,
+    "genre": "Unknown",
+    "isFavorite": false,
+    "comments": "My favorite chill song.",
+    "filePath": "musicapp/songs/Tadz - Good Ole Days.wav"
+  },
+  {
+    "title": "Soulmates",
+    "artist": "Tadz",
+    "year": 2024,
+    "genre": "Unknown",
+    "isFavorite": true,
+    "comments": "Nice lyrics and smooth sound.",
+    "filePath": "musicapp/songs/Tadz - Soulmates (Dear Future Wife _ Husband).wav"
+  }
+]
