@@ -4,69 +4,98 @@
     "artist": "Tadz",
     "year": 2024,
     "genre": "Blues",
+    "isFavorite": false,
+    "comments": "",
     "filePath": "musicapp/songs/Tadz - Good Ole Days.wav"
   },
+
   {
     "title": "Soulmates",
     "artist": "Tadz",
     "year": 2024,
     "genre": "Blues",
+    "isFavorite": false,
+    "comments": "",
     "filePath": "musicapp/songs/Tadz - Soulmates (Dear Future Wife _ Husband).wav"
   },
+
   {
     "title": "Failure",
     "artist": "A. Cooper",
     "year": 2024,
     "genre": "Blues",
+    "isFavorite": false,
+    "comments": "",
     "filePath": "musicapp/songs/A. Cooper - Failure.wav"
   },
+
   {
     "title": "Sleeping Cat",
     "artist": "A. Cooper",
     "year": 2024,
     "genre": "Blues",
+    "isFavorite": false,
+    "comments": "",
     "filePath": "musicapp/songs/A. Cooper - Sleeping Cat.wav"
   },
+
   {
     "title": "Unknown Man",
     "artist": "F J Blues",
     "year": 2024,
     "genre": "Blues",
+    "isFavorite": false,
+    "comments": "",
     "filePath": "musicapp/songs/F J Blues - Unknown Man.wav"
   },
+
   {
     "title": "She Gets All That She Wants (1)",
     "artist": "Ignatz",
     "year": 2024,
     "genre": "Blues",
+    "isFavorite": false,
+    "comments": "",
     "filePath": "musicapp/songs/Ignatz - She Gets All That She Wants (1).wav"
   },
+
   {
     "title": "She Gets All That She Wants",
     "artist": "Ignatz",
     "year": 2024,
     "genre": "Blues",
+    "isFavorite": false,
+    "comments": "",
     "filePath": "musicapp/songs/Ignatz - She Gets All That She Wants.wav"
   },
+
   {
     "title": "Cosmos",
     "artist": "Leiko",
     "year": 2024,
     "genre": "Blues",
+    "isFavorite": false,
+    "comments": "",
     "filePath": "musicapp/songs/Leiko - Cosmos.wav"
   },
+
   {
     "title": "Scared of My Own Blood",
     "artist": "Sunbyrn",
     "year": 2024,
     "genre": "Blues",
+    "isFavorite": false,
+    "comments": "",
     "filePath": "musicapp/songs/Sunbyrn - Scared of My Own Blood.wav"
   },
+
   {
     "title": "Chicken Head Man",
     "artist": "T-Model Ford",
     "year": 2024,
     "genre": "Blues",
+    "isFavorite": false,
+    "comments": "",
     "filePath": "musicapp/songs/T-Model Ford - Chicken Head Man.wav"
   }
 ]

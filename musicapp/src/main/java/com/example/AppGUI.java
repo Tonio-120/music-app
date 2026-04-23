@@ -21,6 +21,7 @@ public class AppGUI {
     static Song currentSong;
 
     public static void main(String[] args) {
+
         loadUserSettings();
 
         JFrame frame = new JFrame("Spotify App");
@@ -53,7 +54,10 @@ public class AppGUI {
         quitButton.setBounds(280, 170, 120, 30);
 
         JButton commentButton = new JButton("Add Comment");
-        commentButton.setBounds(200, 230, 150, 30);
+        commentButton.setBounds(120, 230, 120, 30);
+
+        JButton favoriteButton = new JButton("Toggle Favorite");
+        favoriteButton.setBounds(280, 230, 150, 30);
 
         frame.add(homeButton);
         frame.add(searchButton);
@@ -64,105 +68,154 @@ public class AppGUI {
         frame.add(stopButton);
         frame.add(quitButton);
         frame.add(commentButton);
+        frame.add(favoriteButton);
 
-        homeButton.addActionListener(e ->
-            JOptionPane.showMessageDialog(frame, "Home button clicked")
-        );
-
-        searchButton.addActionListener(e ->
-            JOptionPane.showMessageDialog(frame, "Search button clicked")
-        );
-
-        libraryButton.addActionListener(e -> {
-            if (userSongs.size() > 0) {
-                StringBuilder sb = new StringBuilder();
-
-                for (Song song : userSongs) {
-                    sb.append(song.title)
-                      .append(" - ")
-                      .append(song.artist)
-                      .append("\nFavorite: ")
-                      .append(song.isFavorite)
-                      .append("\nComments: ")
-                      .append(song.comments)
-                      .append("\n\n");
-                }
-
-                JOptionPane.showMessageDialog(frame, sb.toString());
-            } else {
-                JOptionPane.showMessageDialog(frame, "No user settings loaded.");
-            }
-        });
-
-        playButton.addActionListener(e -> {
-            if (userSongs.size() > 0) {
-                Song song = userSongs.get(0);
-                playSong(song, frame);
-            } else {
-                JOptionPane.showMessageDialog(frame, "No songs loaded.");
-            }
-        });
-
-        pauseButton.addActionListener(e -> {
-            if (currentClip != null && currentClip.isRunning()) {
-                currentClip.stop();
-                JOptionPane.showMessageDialog(frame, "Paused.");
-            } else {
-                JOptionPane.showMessageDialog(frame, "No song is currently playing.");
-            }
-        });
-
-        resumeButton.addActionListener(e -> {
-            if (currentClip != null) {
-                currentClip.start();
-                JOptionPane.showMessageDialog(frame, "Resumed.");
-            } else {
-                JOptionPane.showMessageDialog(frame, "No song loaded.");
-            }
-        });
-
-        stopButton.addActionListener(e -> {
-            if (currentClip != null) {
-                currentClip.stop();
-                currentClip.close();
-                currentClip = null;
-                JOptionPane.showMessageDialog(frame, "Stopped.");
-            } else {
-                JOptionPane.showMessageDialog(frame, "No song loaded.");
-            }
-        });
-
-        quitButton.addActionListener(e -> {
-            if (currentClip != null) {
-                currentClip.stop();
-                currentClip.close();
-            }
-            System.exit(0);
-        });
-
-        commentButton.addActionListener(e -> {
-            if (userSongs.size() > 0) {
-                Song song = userSongs.get(0);
-
-                String newComment = JOptionPane.showInputDialog(
-                    frame,
-                    "Enter new comment for " + song.title
-                );
-
-                if (newComment != null) {
-                    song.comments = newComment;
-
-                    JOptionPane.showMessageDialog(
-                        frame,
-                        "Updated comment:\n" + song.comments
-                    );
-                }
-            } else {
-                JOptionPane.showMessageDialog(frame, "No songs loaded.");
-            }
-        });
+        homeButton.addActionListener(e -> showHome(frame));
+        searchButton.addActionListener(e -> searchSongs(frame));
+        libraryButton.addActionListener(e -> showLibrary(frame));
+        playButton.addActionListener(e -> playFirstSong(frame));
+        pauseButton.addActionListener(e -> pauseSong(frame));
+        resumeButton.addActionListener(e -> resumeSong(frame));
+        stopButton.addActionListener(e -> stopSong(frame));
+        quitButton.addActionListener(e -> quitProgram());
+        commentButton.addActionListener(e -> addComment(frame));
+        favoriteButton.addActionListener(e -> toggleFavorite(frame));
 
         frame.setVisible(true);
+    }
+
+    public static void showHome(JFrame frame) {
+        JOptionPane.showMessageDialog(
+            frame,
+            "Welcome to your Spotify-like GUI app!\nUse the buttons to browse and control music."
+        );
+    }
+
+    public static void searchSongs(JFrame frame) {
+        if (userSongs.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "No songs loaded.");
+            return;
+        }
+
+        String search = JOptionPane.showInputDialog(frame, "Enter title search:");
+        if (search == null || search.trim().isEmpty()) {
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (Song song : userSongs) {
+            if (song.getTitle().toLowerCase().contains(search.toLowerCase())) {
+                sb.append(song.getTitle())
+                  .append(" - ")
+                  .append(song.getArtist())
+                  .append("\n");
+            }
+        }
+
+        if (sb.length() == 0) {
+            JOptionPane.showMessageDialog(frame, "No matches found.");
+        } else {
+            JOptionPane.showMessageDialog(frame, sb.toString(), "Search Results", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    public static void showLibrary(JFrame frame) {
+        if (userSongs.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "No songs loaded.");
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (Song song : userSongs) {
+            sb.append(song.getTitle())
+              .append(" - ")
+              .append(song.getArtist())
+              .append("\nFavorite: ")
+              .append(song.isFavorite())
+              .append("\nComments: ")
+              .append(song.getComments())
+              .append("\n\n");
+        }
+
+        JOptionPane.showMessageDialog(frame, sb.toString(), "Library", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static void playFirstSong(JFrame frame) {
+        if (userSongs.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "No songs loaded.");
+            return;
+        }
+
+        Song song = userSongs.get(0);
+        playSong(song, frame);
+    }
+
+    public static void pauseSong(JFrame frame) {
+        if (currentClip != null && currentClip.isRunning()) {
+            currentClip.stop();
+            JOptionPane.showMessageDialog(frame, "Paused.");
+        } else {
+            JOptionPane.showMessageDialog(frame, "No song is currently playing.");
+        }
+    }
+
+    public static void resumeSong(JFrame frame) {
+        if (currentClip != null) {
+            currentClip.start();
+            JOptionPane.showMessageDialog(frame, "Resumed.");
+        } else {
+            JOptionPane.showMessageDialog(frame, "No song loaded.");
+        }
+    }
+
+    public static void stopSong(JFrame frame) {
+        if (currentClip != null) {
+            currentClip.stop();
+            currentClip.setMicrosecondPosition(0);
+            JOptionPane.showMessageDialog(frame, "Stopped.");
+        } else {
+            JOptionPane.showMessageDialog(frame, "No song loaded.");
+        }
+    }
+
+    public static void addComment(JFrame frame) {
+        if (userSongs.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "No songs loaded.");
+            return;
+        }
+
+        Song song = userSongs.get(0);
+
+        String newComment = JOptionPane.showInputDialog(
+            frame,
+            "Enter new comment for " + song.getTitle()
+        );
+
+        if (newComment != null) {
+            song.setComments(newComment);
+
+            JOptionPane.showMessageDialog(
+                frame,
+                "Updated comment:\n" + song.getComments()
+            );
+        }
+    }
+
+    public static void toggleFavorite(JFrame frame) {
+        if (userSongs.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "No songs loaded.");
+            return;
+        }
+
+        Song song = userSongs.get(0);
+        song.setFavorite(!song.isFavorite());
+
+        JOptionPane.showMessageDialog(
+            frame,
+            song.getTitle() + " favorite status is now: " + song.isFavorite()
+        );
     }
 
     public static void loadUserSettings() {
@@ -171,7 +224,9 @@ public class AppGUI {
             FileReader reader = new FileReader("musicapp/user-settings.json");
             Song[] songsArray = gson.fromJson(reader, Song[].class);
             reader.close();
+
             userSongs = new ArrayList<>(Arrays.asList(songsArray));
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error loading user-settings.json");
             e.printStackTrace();
@@ -185,7 +240,7 @@ public class AppGUI {
                 currentClip.close();
             }
 
-            File file = new File(song.filePath);
+            File file = new File(song.getFilePath());
             AudioInputStream audio = AudioSystem.getAudioInputStream(file);
             currentClip = AudioSystem.getClip();
             currentClip.open(audio);
@@ -195,15 +250,24 @@ public class AppGUI {
 
             JOptionPane.showMessageDialog(
                 frame,
-                "Playing: " + song.title +
-                "\nArtist: " + song.artist +
-                "\nFavorite: " + song.isFavorite +
-                "\nComments: " + song.comments
+                "Playing: " + song.getTitle()
+                    + "\nArtist: " + song.getArtist()
+                    + "\nFavorite: " + song.isFavorite()
+                    + "\nComments: " + song.getComments()
             );
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(frame, "Error playing file.");
             e.printStackTrace();
         }
+    }
+
+    public static void quitProgram() {
+        if (currentClip != null) {
+            currentClip.stop();
+            currentClip.close();
+        }
+
+        System.exit(0);
     }
 }
